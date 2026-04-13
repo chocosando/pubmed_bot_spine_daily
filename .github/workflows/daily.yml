@@ -1,7 +1,7 @@
 name: Daily PubMed Notification
 on:
   schedule:
-    - cron: '15 21 * * *' # # 매일 한국 시간 오전 9시 (UTC 0시) 실행
+    - cron: '15 21 * * *' # # 매일 한국 시간 오전 6:15 시 (UTC 0시) 실행
   workflow_dispatch: # 직접 실행해볼 수 있는 버튼 생성
 
 jobs:
