@@ -5,16 +5,18 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-# 환경 변수 설정
+# 환경 변수 및 설정
 GMAIL_USER = os.getenv('GMAIL_USER')
 GMAIL_PW = os.getenv('GMAIL_PASSWORD')
 OPENAI_KEY = os.getenv('OPENAI_API_KEY')
-RECEIVER_EMAIL = GMAIL_USER 
+
+# [수정] 받는 사람 이메일 주소들을 리스트로 관리하세요.
+RECEIVER_EMAILS = [GMAIL_USER, "chocosando@daum.net"] 
 
 def get_latest_paper_details():
     Entrez.email = GMAIL_USER
-    # 검색 쿼리: Radiology 저널의 최신 논문
-    query = 'Radiology[Journal] AND "last 30 days"[dp]'
+    # MSK Radiology 관련 최신 논문 검색 (테스트를 위해 기간 30일 설정)
+    query = '("Musculoskeletal Radiology"[Mesh] OR "Radiology"[Journal]) AND "last 30 days"[dp]'
     handle = Entrez.esearch(db="pubmed", term=query, sort="relevance", retmax=1)
     record = Entrez.read(handle)
     id_list = record["IdList"]
@@ -28,92 +30,75 @@ def get_latest_paper_details():
     article_data = records['PubmedArticle'][0]
     medline = article_data['MedlineCitation']['Article']
     
-    # 1. 제목 및 초록
     title = medline.get('ArticleTitle', 'No Title')
     abstract_list = medline.get('Abstract', {}).get('AbstractText', [])
     abstract = " ".join([str(text) for text in abstract_list])
     
-    # 2. 저자 전원 추출
-    authors = []
-    for auth in medline.get('AuthorList', []):
-        authors.append(f"{auth.get('LastName', '')} {auth.get('Initials', '')}")
+    authors = [f"{auth.get('LastName', '')} {auth.get('Initials', '')}" for auth in medline.get('AuthorList', [])]
     author_text = ", ".join(authors) if authors else "Unknown"
     
-    # 3. DOI 정보 추출
     doi = "N/A"
-    article_ids = article_data['PubmedData'].get('ArticleIdList', [])
-    for aid in article_ids:
+    for aid in article_data['PubmedData'].get('ArticleIdList', []):
         if aid.attributes.get('IdType') == 'doi':
             doi = str(aid)
             break
             
-    # 4. 저널 정보 및 날짜
     journal = medline['Journal'].get('Title', 'Unknown Journal')
-    pub_date = medline['Journal']['JournalIssue']['PubDate']
-    date_str = f"{pub_date.get('Year', 'N/A')} {pub_date.get('Month', '')}"
     
     return {
-        "title": title,
-        "abstract": abstract,
-        "authors": author_text,
-        "journal": journal,
-        "date": date_str,
-        "pmid": pmid,
-        "doi": doi,
+        "title": title, "abstract": abstract, "authors": author_text,
+        "journal": journal, "pmid": pmid, "doi": doi,
         "pubmed_url": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/",
         "doi_url": f"https://doi.org/{doi}" if doi != "N/A" else "#"
     }
 
-def summarize_paper(abstract):
+def summarize_and_translate(abstract):
     client = openai.OpenAI(api_key=OPENAI_KEY)
+    # [수정] 영어 요약과 한글 번역을 동시에 요청하는 프롬프트
+    prompt = f"""
+    Summarize the following medical abstract into 3 bullet points in English (Objective, Findings, Clinical Implication).
+    Then, provide a natural Korean translation for those 3 points.
+    
+    Abstract: {abstract}
+    """
+    
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": "You are a professional medical radiologist. Summarize the following abstract in 3 professional bullet points (Objective, Findings, Clinical Implication) in English."},
-            {"role": "user", "content": abstract}
+            {"role": "system", "content": "You are a professional musculoskeletal radiologist and medical translator."},
+            {"role": "user", "content": prompt}
         ]
     )
     return response.choices[0].message.content
 
-def send_mail(info, summary):
-    # HTML 메일 본문 구성 (가독성 및 이미지 효과)
+def send_mail(info, content, receiver):
     html_content = f"""
     <html>
-    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <body style="font-family: 'Malgun Gothic', sans-serif; line-height: 1.6;">
         <div style="max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 10px;">
-            <div style="text-align: center; margin-bottom: 20px;">
-                <img src="https://pubmed.ncbi.nlm.nih.gov/images/pubmed-logo.pdf.png" alt="PubMed Logo" style="width: 150px;">
-                <h2 style="color: #0071bc;">Today's Radiology Pick</h2>
-            </div>
-            
+            <h2 style="color: #0071bc; border-bottom: 2px solid #0071bc; padding-bottom: 10px;">Daily Radiology Update</h2>
             <h3 style="color: #2c3e50;">{info['title']}</h3>
+            <p style="font-size: 0.9em; color: #555;"><strong>Authors:</strong> {info['authors']}<br>
+            <strong>Journal:</strong> {info['journal']}</p>
             
-            <p><strong>Authors:</strong> {info['authors']}</p>
-            <p><strong>Journal:</strong> <i>{info['journal']}</i> ({info['date']})</p>
-            
-            <div style="background-color: #f9f9f9; padding: 15px; border-left: 5px solid #0071bc; margin: 20px 0;">
-                <h4 style="margin-top: 0;">🔬 AI Summary</h4>
-                <div style="white-space: pre-wrap;">{summary}</div>
+            <div style="background-color: #f0f4f8; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                <h4 style="margin-top: 0; color: #004a99;">🔬 AI Summary & Translation</h4>
+                <div style="white-space: pre-wrap;">{content}</div>
             </div>
             
-            <p><strong>PMID:</strong> {info['pmid']} | <strong>DOI:</strong> {info['doi']}</p>
-            
-            <div style="margin-top: 30px; text-align: center;">
-                <a href="{info['pubmed_url']}" style="background-color: #0071bc; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-right: 10px;">View on PubMed</a>
-                <a href="{info['doi_url']}" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">View via DOI</a>
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="{info['pubmed_url']}" style="background-color: #0071bc; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">PubMed 보기</a>
+                <a href="{info['doi_url']}" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-left: 10px;">DOI 원문보기</a>
             </div>
-            
-            <hr style="margin-top: 30px;">
-            <p style="font-size: 12px; color: #888;">This is an automated research summary for Dr. YoungHan.</p>
         </div>
     </body>
     </html>
     """
     
     msg = MIMEMultipart()
-    msg['Subject'] = f"Radiology Update: {info['title'][:60]}..."
+    msg['Subject'] = f"[PubMed] {info['title'][:50]}..."
     msg['From'] = GMAIL_USER
-    msg['To'] = RECEIVER_EMAIL
+    msg['To'] = receiver
     msg.attach(MIMEText(html_content, 'html'))
 
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
@@ -121,15 +106,15 @@ def send_mail(info, summary):
         server.send_message(msg)
 
 if __name__ == "__main__":
-    print("Fetching paper info...")
     info = get_latest_paper_details()
-    
     if info:
-        print("Generating summary...")
-        summary = summarize_paper(info['abstract'])
-        
-        print("Sending HTML email...")
-        send_mail(info, summary)
-        print("Success!")
+        content = summarize_and_translate(info['abstract'])
+        # [수정] 여러 명에게 발송
+        for email in RECEIVER_EMAILS:
+            try:
+                send_mail(info, content, email)
+                print(f"Success: Sent to {email}")
+            except Exception as e:
+                print(f"Failed: {email} - {e}")
     else:
         print("No papers found.")
