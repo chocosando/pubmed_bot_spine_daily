@@ -28,14 +28,15 @@ def get_latest_paper():
 def summarize_paper(abstract):
     client = openai.OpenAI(api_key=OPENAI_KEY)
     response = client.chat.completions.create(
-        model="gpt-4o", # 또는 gpt-3.5-turbo
+#        model="gpt-4o", # 또는 gpt-3.5-turbo
+        model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": "You are a medical researcher. Summarize the abstract in English with 3 clear bullet points: Objective, Key Findings, and Clinical Implication."},
             {"role": "user", "content": abstract}
         ]
     )
     return response.choices[0].message.content
-
+ 
 # 4. 이메일 전송
 def send_mail(content):
     msg = MIMEText(content)
