@@ -244,6 +244,7 @@ if __name__ == "__main__":
                 print(f"Email failed: {e}")
         
         # 2. 텔레그램 발송 (추가된 로직)
+        print("Attempting to send Telegram message...") # 로그 확인용 문구
         try:
             status = send_telegram_message(info, content)
             if status == 200:
@@ -253,7 +254,6 @@ if __name__ == "__main__":
     else:
         print("No papers found.")
 
-        
 
 # if __name__ == "__main__":
 #     info = get_latest_paper_details()
