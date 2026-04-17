@@ -143,6 +143,7 @@ def send_mail(info, content, receiver):
                 <h2 style="color: #0071bc; margin: 0;">📩 Spine Radiology Daily Report</h2>
                 <p style="font-size: 0.8em; color: #999; margin-top: 15px;">  </p>
                 <p style="font-size: 1.2em; color: #EEEEEE; margin-top: 15px;"> {info['title']} </p>
+                <p style="font-size: 1.0em; color: #EEEEEE; margin-top: 15px;"> {info['journal']} | {info['date']} </p>
                 <p style="font-size: 0.8em; color: #999; margin-top: 15px;">  </p>
             </header>
             
