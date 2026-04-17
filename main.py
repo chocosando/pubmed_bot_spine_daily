@@ -162,7 +162,12 @@ def summarize_and_translate(abstract):
     prompt = f"""
     You are an expert Musculoskeletal Radiologist and Medical Scientist (M.D.-Ph.D.). 
     Analyze the provided abstract in great detail for a specialist-level report.
-
+    
+    [Output Format]
+    1. Title: {info['title']}
+    2. Journal & Date: {info['journal']} | Published: {info.get('date', 'N/A')}
+    3. Authors: {info.get('authors', 'N/A')}
+    
     [Guidelines]
     1. Expand the content to be twice as detailed as a standard summary.
     2. Write in Korean, but ALWAYS include key technical and medical terms in English brackets [English Term].
@@ -173,11 +178,11 @@ def summarize_and_translate(abstract):
        - 고찰: 실제 판독 현장에서의 의의와 기대 효과.
        - 한계점: 초록에서 언급된 제약 사항 기술.
 
-    Abstract: {abstract}
+    Abstract to analyze: {info['abstract']}
     """
     
     response = client.chat.completions.create(
-        model="gpt-4o", # 정보량이 많아지므로 논리력이 필요하다면 "gpt-4o"를 강력 추천합니다.
+        model="gpt-4o", 
         messages=[
             {"role": "system", "content": "You are a senior academic researcher providing in-depth radiology paper reviews."},
             {"role": "user", "content": prompt}
@@ -186,7 +191,7 @@ def summarize_and_translate(abstract):
     )
     return response.choices[0].message.content
 
-
+    
 
 def send_mail(info, content, receiver):
     html_content = f"""
