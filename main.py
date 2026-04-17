@@ -142,8 +142,8 @@ def send_mail(info, content, receiver):
             <header style="border-bottom: 3px solid #0071bc; padding-bottom: 15px; margin-bottom: 25px;">
                 <h2 style="color: #0071bc; margin: 0;">📩 Spine Radiology Daily Report</h2>
                 <p style="font-size: 0.8em; color: #999; margin-top: 15px;">  </p>
-                <p style="font-size: 1.2em; color: #EEEEEE; margin-top: 15px;"> {info['title']} </p>
-                <p style="font-size: 1.0em; color: #EEEEEE; margin-top: 15px;"> {info['journal']} | {info['date']} </p>
+                <p style="font-size: 1.0em; color: #111111; margin-top: 15px;"> {info['title']} </p>
+                <p style="font-size: 0.8em; color: #222222; margin-top: 15px;"> {info['journal']} | {info['date']} </p>
                 <p style="font-size: 0.8em; color: #999; margin-top: 15px;">  </p>
             </header>
             
