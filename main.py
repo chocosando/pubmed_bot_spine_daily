@@ -15,27 +15,33 @@ OPENAI_KEY = os.getenv('OPENAI_API_KEY')
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
-RECEIVER_EMAILS = [GMAIL_USER, "chocosando@daum.net", "agn70@yuhs.ac", "reanhea55@yuhs.ac", "classic0610@yuhs.ac", "andrew0668@yuhs.ac", "sando@yuhs.ac", "jaywony@gmail.com", "jjdragon112@gmail.com", "leesw1@gmail.com", "drchoi01@snu.ac.kr", "chung@amc.seoul.kr"] 
-#RECEIVER_EMAILS = [GMAIL_USER]  
+#RECEIVER_EMAILS = [GMAIL_USER, "chocosando@daum.net", "agn70@yuhs.ac", "reanhea55@yuhs.ac", "classic0610@yuhs.ac", "andrew0668@yuhs.ac", "sando@yuhs.ac", "jaywony@gmail.com", "jjdragon112@gmail.com", "leesw1@gmail.com", "drchoi01@snu.ac.kr", "chung@amc.seoul.kr"] 
+RECEIVER_EMAILS = [GMAIL_USER]  
 
 def get_latest_paper_details():
     Entrez.email = GMAIL_USER
     
-    journal_list = [
-        "Radiology", "Radiology. Artificial intelligence", "Lancet Digital Health",
-        "European Radiology", "Skeletal radiology", "AJR. American journal of roentgenology",
-        "Korean Journal of radiology", "European journal of Radiology", "Scientific Reports",
-        "Nature Medicine", "Nature Communications", "Lancet", "Spine", "The Spine Journal",
-        "AJNR. American journal of neuroradiology", "Neuroradiology", "Bone & joint journal",
-        "PLoS ONE", "JAMA"
-    ]
+    # journal_list = [
+    #     "Radiology", "Radiology. Artificial intelligence", "Lancet Digital Health",
+    #     "European Radiology", "Skeletal radiology", "AJR. American journal of roentgenology",
+    #     "Korean Journal of radiology", "European journal of Radiology", "Scientific Reports",
+    #     "Nature Medicine", "Nature Communications", "Lancet", "Spine", "The Spine Journal",
+    #     "AJNR. American journal of neuroradiology", "Neuroradiology", "Bone & joint journal",
+    #     "PLoS ONE", "JAMA"
+    # ]
 
-    journals = " OR ".join([f'"{j}"[Journal]' for j in journal_list])
-    topics = '("Spine"[Mesh] OR "Spinal Cord"[Mesh] OR "Spondylosis"[Mesh] OR "Intervertebral Disc"[Mesh] OR "Spinal Diseases"[Mesh] OR "Vertebrae"[Title/Abstract])'
+    # 1 [핵심 변경] JCR Radiology 카테고리 전체를 아우르는 검색 필터
+    radiology_all_jcr = '("Radiology"[Journal] OR "Diagnostic Imaging"[Journal] OR "Nuclear Medicine"[Journal] OR "Medical Imaging"[Journal])'
+    # 2 Spine 관련 핵심 키워드 (MSK Radiologist 전문성 유지)
+    spine_topics = '("Spine"[Mesh] OR "Spinal Cord"[Mesh] OR "Spondylosis"[Mesh] OR "Intervertebral Disc"[Mesh] OR "Spinal Diseases"[Mesh] OR "Vertebrae"[Title/Abstract])'
+    # 3 nature 계열 + SCI/SCIE급 고퀄리티 필터 (Review나 Case Report 제외 가능)
+    nature_filter = '("Nature"[Journal] OR "Nature"[Title/Abstract])'
 
-    # 최신성 확보를 위한 쿼리
-    query = f"({journals}) AND {topics} AND hasabstract[Filter] AND (2024:2030[pdat])"
+    # 기존 쿼리에 결합 예시
+#    query = f"{radiology_all_jcr} AND {spine_topics} AND hasabstract[Filter] AND (2024:2030[pdat])"
+    query = f"({journals_query} OR {nature_filter}) AND {topics} AND hasabstract[Filter] AND (2025:2030[pdat])"
     
+
     try:
         handle = Entrez.esearch(db="pubmed", term=query, sort="relevance", retmax=20)
         record = Entrez.read(handle)
@@ -206,7 +212,7 @@ if __name__ == "__main__":
         # 텔레그램 발송
         print("Attempting to send Telegram message...")
         try:
-            status = send_telegram_message(info, content)
+#            status = send_telegram_message(info, content)
             if status == 200:
                 print("Telegram success!")
         except Exception as e:
