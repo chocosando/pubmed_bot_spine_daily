@@ -90,11 +90,12 @@ def get_latest_paper_details():
     
     return {
         "title": title, "abstract": abstract, "authors": author_text,
+        "abstract": abstract, # 기존에 추출한 abstract 변수
         "journal": journal, "pmid": pmid, "doi": doi,
+        "date": date_str if date_str else "Date N/A", # 여기서 'date' 키를 확실히 생성
         "pubmed_url": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/",
         "doi_url": f"https://doi.org/{doi}" if doi != "N/A" else "#"
     }
-
 
 
 def summarize_and_translate(abstract):
