@@ -14,8 +14,8 @@ GMAIL_PW = os.getenv('GMAIL_PASSWORD')
 OPENAI_KEY = os.getenv('OPENAI_API_KEY')
 
 # [수정] 받는 사람 이메일 주소들을 리스트로 관리하세요.
-RECEIVER_EMAILS = [GMAIL_USER, "chocosando@daum.net", "agn70@yuhs.ac", "reanhea55@yuhs.ac", "classic0610@yuhs.ac", "andrew0668@yuhs.ac", "sando@yuhs.ac", "jaywony@gmail.com", "jjdragon112@gmail.com", "leesw1@gmail.com", "drchoi01@snu.ac.kr"] 
-#RECEIVER_EMAILS = [GMAIL_USER] 
+#RECEIVER_EMAILS = [GMAIL_USER, "chocosando@daum.net", "agn70@yuhs.ac", "reanhea55@yuhs.ac", "classic0610@yuhs.ac", "andrew0668@yuhs.ac", "sando@yuhs.ac", "jaywony@gmail.com", "jjdragon112@gmail.com", "leesw1@gmail.com", "drchoi01@snu.ac.kr"] 
+RECEIVER_EMAILS = [GMAIL_USER] 
 
 
 def get_latest_paper_details():
@@ -268,7 +268,7 @@ if __name__ == "__main__":
         # 2. 텔레그램 발송 (추가된 로직)
         print("Attempting to send Telegram message...") # 로그 확인용 문구
         try:
-            status = send_telegram_message(info, content)
+#            status = send_telegram_message(info, content)
             if status == 200:
                 print("Telegram success!")
         except Exception as e:
