@@ -184,29 +184,52 @@ def send_mail(info, content, receiver):
         server.login(GMAIL_USER, GMAIL_PW)
         server.send_message(msg)
 
+
 def send_telegram_message(info, content):
-    token = os.environ.get('TELEGRAM_BOT_TOKEN')
-    chat_id = os.environ.get('TELEGRAM_CHAT_ID')
-    
-    if not token or not chat_id:
-        print("DEBUG: Telegram credentials missing.")
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         return
     
-    url = f"https://api.telegram.org/bot{token}/sendMessage"
-    payload = {
-        "chat_id": chat_id,
-        "text": f"<b>{info['title']}</b>\n\n{content}",
-        "parse_mode": "HTML"
-    }
+    # 텔레그램은 MarkdownV2보다 HTML 파싱이 안정적일 때가 많습니다.
+    text = f"<b>[Daily Spine Radiology]</b>\n\n"
+    text += f"<b>{info['title']}</b>\n\n"
+    text += f"<i>{info['journal']} | {info['date']}</i>\n\n"
+    text += f"━━━━━━━━━━━━━━━\n"
+    text += f"{content}\n"
+    text += f"━━━━━━━━━━━━━━━\n\n"
+    text += f"🔗 <a href='{info['pubmed_url']}'>PubMed 보기</a>"
 
-    try:
-        # timeout=10을 주어 무한 대기를 방지하고, 결과를 출력합니다.
-        res = requests.post(url, json=payload, timeout=10)
-        print(f"DEBUG: Telegram Response Code: {res.status_code}")
-        if res.status_code != 200:
-            print(f"DEBUG: Telegram Error Message: {res.text}")
-    except Exception as e:
-        print(f"DEBUG: Telegram Exception occurred: {e}")
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+    payload = {"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML"}
+    
+    res = requests.post(url, json=payload)
+    return res.status_code
+
+
+
+
+# def send_telegram_message(info, content):
+#     token = os.environ.get('TELEGRAM_BOT_TOKEN')
+#     chat_id = os.environ.get('TELEGRAM_CHAT_ID')
+    
+#     if not token or not chat_id:
+#         print("DEBUG: Telegram credentials missing.")
+#         return
+    
+#     url = f"https://api.telegram.org/bot{token}/sendMessage"
+#     payload = {
+#         "chat_id": chat_id,
+#         "text": f"<b>{info['title']}</b>\n\n{content}",
+#         "parse_mode": "HTML"
+#     }
+
+#     try:
+#         # timeout=10을 주어 무한 대기를 방지하고, 결과를 출력합니다.
+#         res = requests.post(url, json=payload, timeout=10)
+#         print(f"DEBUG: Telegram Response Code: {res.status_code}")
+#         if res.status_code != 200:
+#             print(f"DEBUG: Telegram Error Message: {res.text}")
+#     except Exception as e:
+#         print(f"DEBUG: Telegram Exception occurred: {e}")
         
 # def send_telegram_message(info, content):
 #     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
