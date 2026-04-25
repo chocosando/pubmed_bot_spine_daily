@@ -210,6 +210,7 @@ def send_telegram_message(info, content):
     
     text = f"<b>[KSSR Daily]</b>\n\n"
     text += f"<b>{safe_title}</b>\n\n"
+    text += f"<i>{info['journal']} | {info['date']}</i>\n\n"
     text += f"{safe_content}\n\n"
     text += f"🔗 <a href='{info['pubmed_url']}'>PubMed 보기</a>"
 
