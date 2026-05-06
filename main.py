@@ -18,7 +18,7 @@ TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
 RECEIVER_EMAILS = [GMAIL_USER, "chocosando@daum.net", "agn70@yuhs.ac", "reanhea55@yuhs.ac", "classic0610@yuhs.ac", "andrew0668@yuhs.ac",  
                    "jaywony@gmail.com", "jjdragon112@gmail.com", "leesw1@gmail.com", "drchoi01@snu.ac.kr", "chung@amc.seoul.kr",
-                   "mbgracie@gmail.com", "hebecrom@hanmail.net"]
+                   "mbgracie@gmail.com", "hebecrom@hanmail.net", "nimlee86@yuhs.ac" ]
 
 #RECEIVER_EMAILS = ["chocosando@daum.net"]  
 
