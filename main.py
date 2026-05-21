@@ -35,7 +35,7 @@ def get_latest_paper_details():
     # ]
 
     # 1 [핵심 변경] JCR Radiology 카테고리 전체를 아우르는 검색 필터
-    radiology_all_jcr = '("Radiology"[Journal] OR "Diagnostic Imaging"[Journal] OR "Nuclear Medicine"[Journal] OR "Medical Imaging"[Journal])'
+    radiology_all_jcr = '("Radiology"[Journal] OR "Diagnostic Imaging"[Journal] OR "Medical Imaging"[Journal])'
   
     #2 spine jounral  
     spine_clinical_journals = (
@@ -56,7 +56,7 @@ def get_latest_paper_details():
     
 
     try:
-        handle = Entrez.esearch(db="pubmed", term=query, sort="relevance", retmax=20)
+        handle = Entrez.esearch(db="pubmed", term=query, sort="relevance", retmax=30)
         record = Entrez.read(handle)
         id_list = record.get("IdList", [])
 
