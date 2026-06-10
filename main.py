@@ -156,20 +156,19 @@ def send_mail(info, content, receiver):
         <div style="max-width: 700px; margin: auto; border: 1px solid #e1e4e8; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
             <header style="border-bottom: 3px solid #0071bc; padding-bottom: 15px; margin-bottom: 25px;">
                 <h2 style="color: #0071bc; margin: 0;">📩 Spine Radiology Daily</h2>
-                <p style="font-size: 0.8em; color: #999; margin-top: 15px;">  </p>
                   <div style="margin-top: 20px;">
-                    <p style="font-size: 1.1em; font-weight: bold; margin: 0; line-height: 1.4;">
+                    <p style="font-size: 1.2em; font-weight: bold; margin: 0; line-height: 1.4;">
                         <a href="{info['pubmed_url']}" style="color: #111111; text-decoration: none;">{info['title']}</a> 
                     </p>
-                    <p style="font-size: 0.85em; color: #555; margin: 8px 0 0 0;">
+                    <p style="font-size: 0.95em; color: #555; margin: 8px 0 0 0;">
                         <span style="color: #222222; font-weight: 600;">{info['journal']} </span> | {info['date']}
                     </p>
                   </div>
             </header>
             
             <section style="margin-bottom: 25px;">
-                <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 5px solid #0071bc;">
-                    <div style="line-height: 1.8;">
+                <div style="background-color: #f8f9fa; padding: 25px; border-radius: 8px; border-left: 5px solid #0071bc;">
+                    <div style="line-height: 1.8; font-size: 1.15em; color: #222;">
                         {formatted_content}
                     </div>
                 </div>
@@ -177,7 +176,7 @@ def send_mail(info, content, receiver):
             
             <footer style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
                 <a href="{info['pubmed_url']}" style="display: inline-block; background-color: #0071bc; color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; font-weight: bold;">PubMed 원문 보기</a>
-                <p style="font-size: 0.8em; color: #999; margin-top: 15px;">본 메일은 PubMed 최신 논문을 분석하여 자동 발송되었습니다.</p>
+                <p style="font-size: 0.85em; color: #999; margin-top: 15px;">본 KSSR Daily 메일은 PubMed 최신 논문을 분석하여 자동 발송되었습니다.</p>
             </footer>
         </div>
     </body>
