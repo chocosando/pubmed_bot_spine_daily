@@ -121,9 +121,9 @@ def summarize_and_translate(info):
     ---
 
     [Guidelines]
-    1. Expand the content to be twice as detailed as a standard summary.
-    2. Write in Korean, but ALWAYS include key technical and medical terms in [English Term].
-    3. Structure: 서론 및 방법, 결과, 고찰 및 한계점.
+    1. Expand the content to be half as summarized as a standard summary.
+    2. Write in Korean, but ALWAYS include key technical and medical terms in (English Term).
+    3. Structure: 배경 및 결과 
 
     Abstract to analyze: {info['abstract']}
     """
