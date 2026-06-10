@@ -18,7 +18,8 @@ TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
 RECEIVER_EMAILS = [GMAIL_USER, "chocosando@daum.net", "agn70@yuhs.ac", "reanhea55@yuhs.ac", "classic0610@yuhs.ac", "andrew0668@yuhs.ac",  
                    "jaywony@gmail.com", "jjdragon112@gmail.com", "leesw1@gmail.com", "drchoi01@snu.ac.kr", "chung@amc.seoul.kr",
-                   "mbgracie@gmail.com", "hebecrom@hanmail.net", "nimlee86@yuhs.ac" , "stan3859@yuhs.ac" , "kyungjin.suh@gmail.com" ]
+                   "mbgracie@gmail.com", "hebecrom@hanmail.net", "nimlee86@yuhs.ac" , "stan3859@yuhs.ac" , "kyungjin.suh@gmail.com" ,
+                    "dhha65@gmail.com", "sujuch@naver.com" ]
 
 #RECEIVER_EMAILS = ["chocosando@daum.net"]  
 
@@ -56,7 +57,7 @@ def get_latest_paper_details():
     
 
     try:
-        handle = Entrez.esearch(db="pubmed", term=query, sort="relevance", retmax=30)
+        handle = Entrez.esearch(db="pubmed", term=query, sort="relevance", retmax=50)
         record = Entrez.read(handle)
         id_list = record.get("IdList", [])
 
@@ -121,9 +122,10 @@ def summarize_and_translate(info):
     ---
 
     [Guidelines]
-    1. Expand the content to be half as summarized as a standard summary.
+    1. Summarize the paper in a SINGLE paragraph, strictly within 3-4 sentences.
     2. Write in Korean, but ALWAYS include key technical and medical terms in (English Term).
-    3. Structure: 배경 및 결과 
+    3. Use formal noun-ending style ('~함') throughout the summary.
+    4. Content: Combine the background and clinical results into one cohesive summary without any headers.
 
     Abstract to analyze: {info['abstract']}
     """
