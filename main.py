@@ -153,7 +153,7 @@ def send_mail(info, content, receiver):
     html_content = f"""
     <html>
     <body style="font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; line-height: 1.6; color: #333;">
-        <div style="max-width: 700px; margin: auto; border: 1px solid #e1e4e8; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <div style="max-width: 700px; margin: auto; border: 1px solid #e1e4e8; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); word-break: keep-all;"">
             <header style="border-bottom: 3px solid #0071bc; padding-bottom: 15px; margin-bottom: 25px;">
                 <h2 style="color: #0071bc; margin: 0;">📩 Spine Radiology Daily</h2>
                   <div style="margin-top: 20px;">
