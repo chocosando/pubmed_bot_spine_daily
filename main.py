@@ -126,8 +126,7 @@ def summarize_and_translate(info):
     2. Write in Korean, but ALWAYS include key technical and medical terms in (English Term).
     3. Use formal noun-ending style ('~함') throughout the summary.
     4. Content: Combine the background and clinical results into one cohesive summary without any headers.
-    
-
+   
     Abstract to analyze: {info['abstract']}
     """
 
@@ -155,7 +154,7 @@ def send_mail(info, content, receiver):
     <body style="font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; line-height: 1.6; color: #333;">
         <div style="max-width: 700px; margin: auto; border: 1px solid #e1e4e8; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); word-break: keep-all;"">
             <header style="border-bottom: 3px solid #0071bc; padding-bottom: 15px; margin-bottom: 25px;">
-                <h2 style="color: #0071bc; margin: 0;">📩 Spine Radiology Daily</h2>
+                <h2 style="color: #0071bc; margin: 0;">📩 Spine Radiology </h2>
                   <div style="margin-top: 20px;">
                     <p style="font-size: 1.15em; font-weight: bold; margin: 0; line-height: 1.4;">
                         <a href="{info['pubmed_url']}" style="color: #111111; text-decoration: none;">{info['title']}</a> 
@@ -184,9 +183,9 @@ def send_mail(info, content, receiver):
     """
     
     msg = MIMEMultipart()
-    msg['Subject'] = f"[KSSR Daily] {info['title'][:60]}..."
+    msg['Subject'] = f"[KSSR] {info['title'][:60]}..."
 #   msg['From'] = GMAIL_USER
-    display_name = "추영 KSSR"
+    display_name = "추영 KSSR bot"
     msg['From'] = f"{Header(display_name, 'utf-8').encode()} <{GMAIL_USER}>"
     
     msg['To'] = receiver
@@ -266,7 +265,7 @@ def send_telegram_message(info, content):
 #         return
     
 #     # 텔레그램은 MarkdownV2보다 HTML 파싱이 안정적일 때가 많습니다.
-#     text = f"<b>[Daily Spine Radiology]</b>\n\n"
+#     text = f"<b>[Spine Radiology]</b>\n\n"
 #     text += f"<b>{info['title']}</b>\n\n"
 #     text += f"<i>{info['journal']} | {info['date']}</i>\n\n"
 #     text += f"━━━━━━━━━━━━━━━\n"
