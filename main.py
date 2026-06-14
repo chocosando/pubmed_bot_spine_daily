@@ -182,7 +182,7 @@ html_content = f"""
     </body>
     </html>
     """
-    
+
     msg = MIMEMultipart()
     msg['Subject'] = f"[KSSR Daily] {info['title'][:60]}..."
 #   msg['From'] = GMAIL_USER
