@@ -150,7 +150,7 @@ def send_mail(info, content, receiver):
     # AI 요약 내용의 줄바꿈(\n)을 HTML 줄바꿈(<br>)으로 변환
     formatted_content = content.replace("\n", "<br>")
     
-html_content = f"""
+    html_content = f"""
     <html>
     <body style="font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; line-height: 1.6; color: #333;">
         <div style="max-width: 700px; margin: auto; border: 1px solid #e1e4e8; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
