@@ -166,11 +166,11 @@ def send_mail(info, content, receiver):
             </header>
             
             <section style="margin-bottom: 25px;">
-                <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px;">
+                <!div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px;">
                     <div style="line-height: 1.7; font-size: 1.05em; color: #222;">
                         {formatted_content}
                     </div>
-                </div>
+                <!/div>
             </section>
             
             <footer style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
