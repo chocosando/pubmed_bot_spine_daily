@@ -122,14 +122,15 @@ def summarize_and_translate(info):
     ---
 
     [Guidelines]
-    1. Summarize the paper in a SINGLE paragraph, strictly within 1-2 sentences (maximum 70 words).
+    1. Summarize the core finding in EXACTLY ONE sentence (Strictly under 100 Korean characters).
     2. Write in Korean, but ALWAYS include key technical and medical terms in (English Term).
     3. Use formal noun-ending style ('~함') throughout the summary.
     4. Content: Combine the background and clinical results into one cohesive summary without any headers.
-   
+    
     Abstract to analyze: {info['abstract']}
     """
 
+#    1. Summarize the paper in a SINGLE paragraph, strictly within 1-2 sentences (maximum 50 words).
     # 1. 제목: {info['title']}
     # 2. 저널 및 날짜: {info['journal']} | 발행일: {info['date']}
     # 3. 저자: {info['authors']}
@@ -148,25 +149,24 @@ def summarize_and_translate(info):
 def send_mail(info, content, receiver):
     # AI 요약 내용의 줄바꿈(\n)을 HTML 줄바꿈(<br>)으로 변환
     formatted_content = content.replace("\n", "<br>")
-    
+    short_title = info['title'][:77] + "..." if len(info['title']) > 80 else info['title']
+
     html_content = f"""
     <html>
     <body style="font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; line-height: 1.6; color: #333;">
         <div style="max-width: 700px; margin: auto; border: 1px solid #e1e4e8; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); word-break: keep-all;"">
-            <header style="border-bottom: 3px solid #0071bc; padding-bottom: 15px; margin-bottom: 25px;">
-                <h2 style="color: #0071bc; margin: 0;">📩 Spine Radiology </h2>
-                  <div style="margin-top: 20px;">
-                    <p style="font-size: 1.15em; font-weight: bold; margin: 0; line-height: 1.4;">
-                        <a href="{info['pubmed_url']}" style="color: #111111; text-decoration: none;">{info['title']}</a> 
-                    </p>
-                    <p style="font-size: 0.9em; color: #555; margin: 8px 0 0 0;">
-                        <span style="color: #222222; font-weight: 600;">{info['journal']} </span> | {info['date']}
-                    </p>
-                  </div>
-            </header>
-            
+        
+        <header style="border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 12px;">
+            <p style="font-size: 1.05em; font-weight: bold; margin: 0; line-height: 1.3;">
+                <a href="{info['pubmed_url']}" style="color: #111111; text-decoration: none;">{short_title}</a> 
+            </p>
+            <p style="font-size: 0.85em; color: #555; margin: 4px 0 0 0;">
+                <span style="color: #222222; font-weight: 600;">{info['journal']}</span> | {info['date']}
+            </p>
+        </header>
+
             <section style="margin-bottom: 25px;">
-                <!div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px;">
+                <!div style="background-color: #f8f9fa; padding: 10px; border-radius: 6px;">
                     <div style="line-height: 1.7; font-size: 1.05em; color: #222;">
                         {formatted_content}
                     </div>
