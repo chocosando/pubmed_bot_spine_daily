@@ -122,7 +122,7 @@ def summarize_and_translate(info):
     ---
 
     [Guidelines]
-    1. Summarize the paper in a SINGLE paragraph, strictly within 1-2 sentences (maximum 100 words).
+    1. Summarize the paper in a SINGLE paragraph, strictly within 1-2 sentences (maximum 80 words).
     2. Write in Korean, but ALWAYS include key technical and medical terms in (English Term).
     3. Use formal noun-ending style ('~함') throughout the summary.
     4. Content: Combine the background and clinical results into one cohesive summary without any headers.
