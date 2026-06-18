@@ -122,7 +122,7 @@ def summarize_and_translate(info):
     ---
 
     [Guidelines]
-    1. Summarize the core finding in EXACTLY ONE sentence (Strictly under 100 Korean characters).
+    1. Summarize the core finding in EXACTLY ONE sentence (Strictly under 150 Korean characters).
     2. Write in Korean, but ALWAYS include key technical and medical terms in (English Term).
     3. Use formal noun-ending style ('~함') throughout the summary.
     4. Content: Combine the background and clinical results into one cohesive summary without any headers.
@@ -149,7 +149,8 @@ def summarize_and_translate(info):
 def send_mail(info, content, receiver):
     # AI 요약 내용의 줄바꿈(\n)을 HTML 줄바꿈(<br>)으로 변환
     formatted_content = content.replace("\n", "<br>")
-    short_title = info['title'][:77] + "..." if len(info['title']) > 80 else info['title']
+  
+    short_title = info['title'][:77] + "..." if len(info['title']) > 80 else info['title'] 
 
     html_content = f"""
     <html>
@@ -158,11 +159,16 @@ def send_mail(info, content, receiver):
         
         <header style="border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 12px;">
             <p style="font-size: 1.05em; font-weight: bold; margin: 0; line-height: 1.3;">
-                <a href="{info['pubmed_url']}" style="color: #111111; text-decoration: none;">{short_title}</a> 
+                <a href="{info['pubmed_url']}" style="color: #111111; text-decoration: none;">{title}</a> 
             </p>
             <p style="font-size: 0.85em; color: #555; margin: 4px 0 0 0;">
                 <span style="color: #222222; font-weight: 600;">{info['journal']}</span> | {info['date']}
             </p>
+
+            <p style="font-size: 0.85em; color: #555; margin: 4px 0 0 0;">
+                몇일 후 weekly 로 변경 예정입니다. 건의사항 있으시면, 이메일 radiologie@gmail 
+            </p>
+
         </header>
 
             <section style="margin-bottom: 25px;">
