@@ -159,16 +159,11 @@ def send_mail(info, content, receiver):
         
         <header style="border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 12px;">
             <p style="font-size: 1.05em; font-weight: bold; margin: 0; line-height: 1.3;">
-                <a href="{info['pubmed_url']}" style="color: #111111; text-decoration: none;">{title}</a> 
+                <a href="{info['pubmed_url']}" style="color: #111111; text-decoration: none;">{info['title']}</a> 
             </p>
             <p style="font-size: 0.85em; color: #555; margin: 4px 0 0 0;">
                 <span style="color: #222222; font-weight: 600;">{info['journal']}</span> | {info['date']}
             </p>
-
-            <p style="font-size: 0.85em; color: #555; margin: 4px 0 0 0;">
-                몇일 후 weekly 로 변경 예정입니다. 건의사항 있으시면, 이메일 radiologie@gmail 
-            </p>
-
         </header>
 
             <section style="margin-bottom: 25px;">
