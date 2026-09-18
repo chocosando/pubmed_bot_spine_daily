@@ -137,8 +137,9 @@ def summarize_and_translate(info):
 #    3. Structure: 제목, 저널 및 날짜, 서론[Introduction], 방법[Methods], 결과[Results], 고찰[Discussion], 한계점[Limitations].
 
     response = client.chat.completions.create(
-        model="gpt-4o",
-        messages=[
+#        model="gpt-4o",
+        model="gpt-6-astra",
+      messages=[
 #            {"role": "system", "content": "You are a senior academic researcher providing in-depth radiology reviews."},
             {"role": "user", "content": prompt}
         ],
