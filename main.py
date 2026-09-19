@@ -143,7 +143,7 @@ def summarize_and_translate(info):
 #            {"role": "system", "content": "You are a senior academic researcher providing in-depth radiology reviews."},
             {"role": "user", "content": prompt}
         ],
-        temperature=0.2
+#        temperature=0.2
     )
     return response.choices[0].message.content
 
