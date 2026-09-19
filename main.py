@@ -16,12 +16,12 @@ OPENAI_KEY = os.getenv('OPENAI_API_KEY')
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
-#RECEIVER_EMAILS = [GMAIL_USER, "chocosando@daum.net", "agn70@yuhs.ac", "reanhea55@yuhs.ac", "classic0610@yuhs.ac", "andrew0668@yuhs.ac",  
-#                   "jaywony@gmail.com", "jjdragon112@gmail.com", "leesw1@gmail.com", "drchoi01@snu.ac.kr", "chung@amc.seoul.kr",
-#                   "mbgracie@gmail.com", "hebecrom@hanmail.net", "nimlee86@yuhs.ac" , "stan3859@yuhs.ac" , "kyungjin.suh@gmail.com" ,
-#                    "dhha65@gmail.com", "sujuch@naver.com" , "reonora77@gmail.com", "chaijw@gmail.com" ]
+RECEIVER_EMAILS = [GMAIL_USER, "chocosando@daum.net", "agn70@yuhs.ac", "reanhea55@yuhs.ac", "classic0610@yuhs.ac", "andrew0668@yuhs.ac",  
+                   "jaywony@gmail.com", "jjdragon112@gmail.com", "leesw1@gmail.com", "drchoi01@snu.ac.kr", "chung@amc.seoul.kr",
+                   "mbgracie@gmail.com", "hebecrom@hanmail.net", "nimlee86@yuhs.ac" , "stan3859@yuhs.ac" , "kyungjin.suh@gmail.com" ,
+                    "dhha65@gmail.com", "sujuch@naver.com" , "reonora77@gmail.com", "chaijw@gmail.com" ]
 
-RECEIVER_EMAILS = ["chocosando@daum.net"]  
+#RECEIVER_EMAILS = ["chocosando@daum.net"]  
 
 def get_latest_paper_details():
     Entrez.email = GMAIL_USER
@@ -137,13 +137,13 @@ def summarize_and_translate(info):
 #    3. Structure: 제목, 저널 및 날짜, 서론[Introduction], 방법[Methods], 결과[Results], 고찰[Discussion], 한계점[Limitations].
 
     response = client.chat.completions.create(
-#        model="gpt-4o",
-        model="gpt-6-astra",
+        model="gpt-4o",
+#        model="gpt-6-astra",
       messages=[
 #            {"role": "system", "content": "You are a senior academic researcher providing in-depth radiology reviews."},
             {"role": "user", "content": prompt}
         ],
-#        temperature=0.2
+        temperature=0.2
     )
     return response.choices[0].message.content
 
