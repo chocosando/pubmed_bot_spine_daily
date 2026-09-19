@@ -16,12 +16,12 @@ OPENAI_KEY = os.getenv('OPENAI_API_KEY')
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
-RECEIVER_EMAILS = [GMAIL_USER, "chocosando@daum.net", "agn70@yuhs.ac", "reanhea55@yuhs.ac", "classic0610@yuhs.ac", "andrew0668@yuhs.ac",  
-                   "jaywony@gmail.com", "jjdragon112@gmail.com", "leesw1@gmail.com", "drchoi01@snu.ac.kr", "chung@amc.seoul.kr",
-                   "mbgracie@gmail.com", "hebecrom@hanmail.net", "nimlee86@yuhs.ac" , "stan3859@yuhs.ac" , "kyungjin.suh@gmail.com" ,
-                    "dhha65@gmail.com", "sujuch@naver.com" , "reonora77@gmail.com", "chaijw@gmail.com" ]
+#RECEIVER_EMAILS = [GMAIL_USER, "chocosando@daum.net", "agn70@yuhs.ac", "reanhea55@yuhs.ac", "classic0610@yuhs.ac", "andrew0668@yuhs.ac",  
+#                   "jaywony@gmail.com", "jjdragon112@gmail.com", "leesw1@gmail.com", "drchoi01@snu.ac.kr", "chung@amc.seoul.kr",
+#                   "mbgracie@gmail.com", "hebecrom@hanmail.net", "nimlee86@yuhs.ac" , "stan3859@yuhs.ac" , "kyungjin.suh@gmail.com" ,
+#                    "dhha65@gmail.com", "sujuch@naver.com" , "reonora77@gmail.com", "chaijw@gmail.com" ]
 
-#RECEIVER_EMAILS = ["chocosando@daum.net"]  
+RECEIVER_EMAILS = ["chocosando@daum.net"]  
 
 def get_latest_paper_details():
     Entrez.email = GMAIL_USER
