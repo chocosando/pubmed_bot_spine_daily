@@ -131,6 +131,7 @@ def summarize_and_translate(info):
 
     [Guidelines]
     1. Summarize the core finding in EXACTLY two or three sentence (Strictly under 500 Korean characters). 목적과 결과 포함.
+    대한의사협회 의학용어집 기준을 준용하여 번역하되, 적절한 번역어가 없는 전문 용어나 약어(Abbreviation)는 영문 그대로 표기해줘.
     2. Write in Korean, but ALWAYS include key technical and medical terms in (English Term).
     3. Use formal noun-ending style ('~함') throughout the summary.
     4. Content: Combine the background and clinical results into one cohesive summary without any headers.
