@@ -21,20 +21,20 @@ TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 KSSR_LOGO_URL = "https://kssr.or.kr/default/img/logo.png"
 KSSR_HOME_URL = "https://kssr.or.kr"
 
-#RECEIVER_EMAILS = [    GMAIL_USER,     "chocosando@daum.net",     "agn70@yuhs.ac",     "reanhea55@yuhs.ac",
-#    "classic0610@yuhs.ac",     "andrew0668@yuhs.ac",    "jaywony@gmail.com",     "jjdragon112@gmail.com",     "leesw1@gmail.com",
-#    "drchoi01@snu.ac.kr",     "chung@amc.seoul.kr",    "mbgracie@gmail.com",     "hebecrom@hanmail.net",     "nimlee86@yuhs.ac",
-#    "stan3859@yuhs.ac",     "kyungjin.suh@gmail.com",    "dhha65@gmail.com",     "sujuch@naver.com",     "reonora77@gmail.com",
-#    "chaijw@gmail.com",
+RECEIVER_EMAILS = [    GMAIL_USER,     "chocosando@daum.net",     "agn70@yuhs.ac",     "reanhea55@yuhs.ac",
+    "classic0610@yuhs.ac",     "andrew0668@yuhs.ac",    "jaywony@gmail.com",     "jjdragon112@gmail.com",     "leesw1@gmail.com",
+    "drchoi01@snu.ac.kr",     "chung@amc.seoul.kr",    "mbgracie@gmail.com",     "hebecrom@hanmail.net",     "nimlee86@yuhs.ac",
+    "stan3859@yuhs.ac",     "kyungjin.suh@gmail.com",    "dhha65@gmail.com",     "sujuch@naver.com",     "reonora77@gmail.com",
+    "chaijw@gmail.com",
     # 새로 추가된 이메일 목록
-#    "angellaseo27@gmail.com",    "sing0078@hanmail.net",    "yoonieunrad@gmail.com",    "eugene801027@gmail.com",    "kangjihee1@gmail.com",
-#    "mysfavorite87@gmail.com",    "mj4907@gmail.com",    "mhlee625@gmail.com",    "dalnara3@snu.ac.kr",    "quartet0@hanmail.net",
-#    "sunjulee98@gmail.com",    "radkhj@yonsei.ac.kr",    "yijh7@naver.com",    "youngjune.kim.md@gmail.com",    "t2star@naver.com",
-#    "bebop8231@gmail.com",    "mediknight@hanmail.net",    "shroh329@gmail.com",    "yssongrad@gmail.com",    "youngcheol.yoon@gmail.com",
-#    "yhlee@cu.ac.kr",    "jaesung-y@hanmail.net",    "smleerad@gmail.com",    "ohsh4803@naver.com"
-#]
+    "angellaseo27@gmail.com",    "sing0078@hanmail.net",    "yoonieunrad@gmail.com",    "eugene801027@gmail.com",    "kangjihee1@gmail.com",
+    "mysfavorite87@gmail.com",    "mj4907@gmail.com",    "mhlee625@gmail.com",    "dalnara3@snu.ac.kr",    "quartet0@hanmail.net",
+    "sunjulee98@gmail.com",    "radkhj@yonsei.ac.kr",    "yijh7@naver.com",    "youngjune.kim.md@gmail.com",    "t2star@naver.com",
+    "bebop8231@gmail.com",    "mediknight@hanmail.net",    "shroh329@gmail.com",    "yssongrad@gmail.com",    "youngcheol.yoon@gmail.com",
+    "yhlee@cu.ac.kr",    "jaesung-y@hanmail.net",    "smleerad@gmail.com",    "ohsh4803@naver.com", "andywson@gmail.com"
+]
 
-RECEIVER_EMAILS = ["chocosando@daum.net"]
+# RECEIVER_EMAILS = ["chocosando@daum.net"]
 
 def get_latest_paper_details():
     Entrez.email = GMAIL_USER
