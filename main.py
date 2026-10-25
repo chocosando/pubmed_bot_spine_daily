@@ -5,6 +5,7 @@ import openai
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.image import MIMEImage
 import random
 from email.header import Header
 import html
@@ -16,24 +17,28 @@ OPENAI_KEY = os.getenv('OPENAI_API_KEY')
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
-RECEIVER_EMAILS = [    GMAIL_USER,     "chocosando@daum.net",     "agn70@yuhs.ac",     "reanhea55@yuhs.ac", 
-    "classic0610@yuhs.ac",     "andrew0668@yuhs.ac",    "jaywony@gmail.com",     "jjdragon112@gmail.com",     "leesw1@gmail.com", 
-    "drchoi01@snu.ac.kr",     "chung@amc.seoul.kr",    "mbgracie@gmail.com",     "hebecrom@hanmail.net",     "nimlee86@yuhs.ac", 
-    "stan3859@yuhs.ac",     "kyungjin.suh@gmail.com",    "dhha65@gmail.com",     "sujuch@naver.com",     "reonora77@gmail.com", 
-    "chaijw@gmail.com",
-    # 새로 추가된 이메일 목록
-    "angellaseo27@gmail.com",    "sing0078@hanmail.net",    "yoonieunrad@gmail.com",    "eugene801027@gmail.com",    "kangjihee1@gmail.com",
-    "mysfavorite87@gmail.com",    "mj4907@gmail.com",    "mhlee625@gmail.com",    "dalnara3@snu.ac.kr",    "quartet0@hanmail.net",    
-    "sunjulee98@gmail.com",    "radkhj@yonsei.ac.kr",    "yijh7@naver.com",    "youngjune.kim.md@gmail.com",    "t2star@naver.com",
-    "bebop8231@gmail.com",    "mediknight@hanmail.net",    "shroh329@gmail.com",    "yssongrad@gmail.com",    "youngcheol.yoon@gmail.com",
-    "yhlee@cu.ac.kr",    "jaesung-y@hanmail.net",    "smleerad@gmail.com",    "ohsh4803@naver.com"
-]
+# KSSR 로고
+KSSR_LOGO_URL = "https://kssr.or.kr/default/img/logo.png"
+KSSR_HOME_URL = "https://kssr.or.kr"
 
-#RECEIVER_EMAILS = ["chocosando@daum.net"]  
+#RECEIVER_EMAILS = [    GMAIL_USER,     "chocosando@daum.net",     "agn70@yuhs.ac",     "reanhea55@yuhs.ac",
+#    "classic0610@yuhs.ac",     "andrew0668@yuhs.ac",    "jaywony@gmail.com",     "jjdragon112@gmail.com",     "leesw1@gmail.com",
+#    "drchoi01@snu.ac.kr",     "chung@amc.seoul.kr",    "mbgracie@gmail.com",     "hebecrom@hanmail.net",     "nimlee86@yuhs.ac",
+#    "stan3859@yuhs.ac",     "kyungjin.suh@gmail.com",    "dhha65@gmail.com",     "sujuch@naver.com",     "reonora77@gmail.com",
+#    "chaijw@gmail.com",
+    # 새로 추가된 이메일 목록
+#    "angellaseo27@gmail.com",    "sing0078@hanmail.net",    "yoonieunrad@gmail.com",    "eugene801027@gmail.com",    "kangjihee1@gmail.com",
+#    "mysfavorite87@gmail.com",    "mj4907@gmail.com",    "mhlee625@gmail.com",    "dalnara3@snu.ac.kr",    "quartet0@hanmail.net",
+#    "sunjulee98@gmail.com",    "radkhj@yonsei.ac.kr",    "yijh7@naver.com",    "youngjune.kim.md@gmail.com",    "t2star@naver.com",
+#    "bebop8231@gmail.com",    "mediknight@hanmail.net",    "shroh329@gmail.com",    "yssongrad@gmail.com",    "youngcheol.yoon@gmail.com",
+#    "yhlee@cu.ac.kr",    "jaesung-y@hanmail.net",    "smleerad@gmail.com",    "ohsh4803@naver.com"
+#]
+
+RECEIVER_EMAILS = ["chocosando@daum.net"]
 
 def get_latest_paper_details():
     Entrez.email = GMAIL_USER
-    
+
     # journal_list = [
     #     "Radiology", "Radiology. Artificial intelligence", "Lancet Digital Health",
     #     "European Radiology", "Skeletal radiology", "AJR. American journal of roentgenology",
@@ -45,8 +50,8 @@ def get_latest_paper_details():
 
     # 1 [핵심 변경] JCR Radiology 카테고리 전체를 아우르는 검색 필터
     radiology_all_jcr = '("Radiology"[Journal] OR "Diagnostic Imaging"[Journal] OR "Medical Imaging"[Journal])'
-  
-    #2 spine jounral  
+
+    #2 spine jounral
     spine_clinical_journals = (
         '("Spine"[Journal] OR "The Spine Journal"[Journal] OR "European Spine Journal"[Journal] OR '
         '"Journal of Neurosurgery Spine"[Journal] OR "Spine Deformity"[Journal] OR "Global Spine Journal"[Journal] OR '
@@ -62,7 +67,7 @@ def get_latest_paper_details():
     # 기존 쿼리에 결합 예시
     query = f"({radiology_all_jcr} OR {spine_clinical_journals}) AND {spine_topics} AND hasabstract[Filter] AND (2025:2030[pdat])"
 #    query = f"({radiology_all_jcr}) AND {spine_topics} AND hasabstract[Filter] AND (2025:2030[pdat])"
-    
+
 
     try:
         handle = Entrez.esearch(db="pubmed", term=query, sort="relevance", retmax=50)
@@ -71,26 +76,26 @@ def get_latest_paper_details():
 
         if not id_list:
             return None
-        
+
         # 무작위 선택
         pmid = random.choice(id_list)
-        
+
         fetch_handle = Entrez.efetch(db="pubmed", id=pmid, retmode="xml")
         fetch_record = Entrez.read(fetch_handle)
         article_data = fetch_record['PubmedArticle'][0]
         medline = article_data['MedlineCitation']['Article']
-        
+
         # 1. 초록 추출
         abstract_list = medline.get('Abstract', {}).get('AbstractText', [])
         abstract = " ".join([str(text) for text in abstract_list])
-        
+
         # 2. 저자 추출 (최대 5명)
         authors_list = []
         if 'AuthorList' in medline:
             for auth in medline['AuthorList']:
                 authors_list.append(f"{auth.get('LastName', '')} {auth.get('Initials', '')}".strip())
         authors_str = ", ".join(authors_list[:5]) + (" et al." if len(authors_list) > 5 else "")
-        
+
         # 3. 날짜 추출
         pub_date_info = medline['Journal']['JournalIssue']['PubDate']
         year = pub_date_info.get('Year', pub_date_info.get('MedlineDate', 'N/A'))
@@ -121,10 +126,10 @@ def get_latest_paper_details():
 
 def summarize_and_translate(info):
     client = openai.OpenAI(api_key=OPENAI_KEY)
-    
+
     # [수정] 요청하신 줄바꿈 포맷 반영
     prompt = f"""
-    You are an expert Spine Radiologist (musculoskeletal radiologist, neuradiologist, intervenitonal radiologist). 
+    You are an expert Spine Radiologist (musculoskeletal radiologist, neuradiologist, intervenitonal radiologist).
     Analyze the provided abstract in great detail for a specialist-level report.
 
     ---
@@ -135,7 +140,7 @@ def summarize_and_translate(info):
     2. Write in Korean, but ALWAYS include key technical and medical terms in (English Term).
     3. Use formal noun-ending style ('~함') throughout the summary.
     4. Content: Combine the background and clinical results into one cohesive summary without any headers.
-    
+
     Abstract to analyze: {info['abstract']}
     """
 
@@ -156,20 +161,37 @@ def summarize_and_translate(info):
     )
     return response.choices[0].message.content
 
-def send_mail(info, content, receiver):
+
+def fetch_logo():
+    """KSSR 로고를 한 번만 다운로드. 실패하면 None 반환 (그 경우 URL 직접 참조로 대체)."""
+    try:
+        res = requests.get(KSSR_LOGO_URL, timeout=10)
+        if res.status_code == 200 and res.content:
+            print("DEBUG: KSSR logo downloaded.")
+            return res.content
+        print(f"DEBUG: Logo fetch failed: HTTP {res.status_code}")
+    except Exception as e:
+        print(f"DEBUG: Logo fetch failed: {e}")
+    return None
+
+
+def send_mail(info, content, receiver, logo_bytes=None):
     # AI 요약 내용의 줄바꿈(\n)을 HTML 줄바꿈(<br>)으로 변환
     formatted_content = content.replace("\n", "<br>")
-  
-    short_title = info['title'][:77] + "..." if len(info['title']) > 80 else info['title'] 
+
+    short_title = info['title'][:77] + "..." if len(info['title']) > 80 else info['title']
+
+    # 로고: 첨부(CID) 성공 시 내장 이미지, 실패 시 원격 URL 사용
+    logo_src = "cid:kssr_logo" if logo_bytes else KSSR_LOGO_URL
 
     html_content = f"""
     <html>
     <body style="font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; line-height: 1.6; color: #333;">
-        <div style="max-width: 700px; margin: auto; border: 1px solid #e1e4e8; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); word-break: keep-all;"">
-        
+        <div style="max-width: 700px; margin: auto; border: 1px solid #e1e4e8; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); word-break: keep-all;">
+
         <header style="border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 12px;">
             <p style="font-size: 1.05em; font-weight: bold; margin: 0; line-height: 1.3;">
-                <a href="{info['pubmed_url']}" style="color: #111111; text-decoration: none;">{info['title']}</a> 
+                <a href="{info['pubmed_url']}" style="color: #111111; text-decoration: none;">{info['title']}</a>
             </p>
             <p style="font-size: 0.85em; color: #555; margin: 4px 0 0 0;">
                 <span style="color: #222222; font-weight: 600;">{info['journal']}</span> | {info['date']}
@@ -177,30 +199,43 @@ def send_mail(info, content, receiver):
         </header>
 
             <section style="margin-bottom: 25px;">
-                <!div style="background-color: #f8f9fa; padding: 10px; border-radius: 6px;">
-                    <div style="line-height: 1.7; font-size: 1.05em; color: #222;">
-                        {formatted_content}
-                    </div>
-                <!/div>
+                <div style="line-height: 1.7; font-size: 1.05em; color: #222;">
+                    {formatted_content}
+                </div>
             </section>
-            
+
             <footer style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
                 <a href="{info['pubmed_url']}" style="display: inline-block; background-color: #0071bc; color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; font-weight: bold;">PubMed 원문 보기</a>
                 <p style="font-size: 0.85em; color: #999; margin-top: 15px;">본 메일은 PubMed 최신 논문을 분석하여 자동 발송되었습니다.</p>
+
+                <div style="margin-top: 20px;">
+                    <a href="{KSSR_HOME_URL}" target="_blank" style="text-decoration: none;">
+                        <img src="{logo_src}" alt="대한척추영상의학회 KSSR" height="40"
+                             style="height: 40px; width: auto; border: 0; display: inline-block;">
+                    </a>
+                </div>
             </footer>
         </div>
     </body>
     </html>
     """
-    
-    msg = MIMEMultipart()
+
+    # 'related' 타입: HTML 본문 + 본문에 삽입되는 이미지(CID)
+    msg = MIMEMultipart('related')
     msg['Subject'] = f"[KSSR] {info['title'][:60]}..."
 #   msg['From'] = GMAIL_USER
     display_name = "추영 KSSR bot"
     msg['From'] = f"{Header(display_name, 'utf-8').encode()} <{GMAIL_USER}>"
-    
+
     msg['To'] = receiver
-    msg.attach(MIMEText(html_content, 'html'))
+    msg.attach(MIMEText(html_content, 'html', 'utf-8'))
+
+    # 로고 이미지 첨부 (본문 내 cid:kssr_logo 로 참조됨)
+    if logo_bytes:
+        img = MIMEImage(logo_bytes, _subtype='png')
+        img.add_header('Content-ID', '<kssr_logo>')
+        img.add_header('Content-Disposition', 'inline', filename='kssr_logo.png')
+        msg.attach(img)
 
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
         server.login(GMAIL_USER, GMAIL_PW)
@@ -212,14 +247,14 @@ def send_telegram_message(info, content):
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         print("DEBUG: Telegram credentials missing.")
         return 0
-    
+
     print("DEBUG: Preparing Telegram message payload...")
-    
+
     # 텔레그램이 싫어하는 태그들 사전 제거
     clean_content = content.replace("<sup>", "^").replace("</sup>", "").replace("<sub>", "_").replace("</sub>", "")
     safe_content = html.escape(clean_content)
     safe_title = html.escape(info['title'])
-    
+
     text = f"<b>[KSSR Daily]</b>\n\n"
     text += f"<b>{safe_title}</b>\n\n"
     text += f"<i>{info['journal']} | {info['date']}</i>\n\n"
@@ -228,12 +263,12 @@ def send_telegram_message(info, content):
 
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     payload = {"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML"}
-    
+
     try:
         print(f"DEBUG: Sending request to Telegram API (Chat ID: {TELEGRAM_CHAT_ID})...")
         # timeout을 15초로 설정하여 무한 대기를 방지합니다.
         res = requests.post(url, json=payload, timeout=15)
-        
+
         print(f"DEBUG: Telegram Response Code: {res.status_code}")
         if res.status_code != 200:
             print(f"DEBUG: Telegram Error Message: {res.text}")
@@ -244,51 +279,6 @@ def send_telegram_message(info, content):
     except Exception as e:
         print(f"DEBUG: Telegram Error - Exception occurred: {e}")
         return 0
-        
-
-
-# def send_telegram_message(info, content):
-#     token = os.environ.get('TELEGRAM_BOT_TOKEN')
-#     chat_id = os.environ.get('TELEGRAM_CHAT_ID')
-    
-#     if not token or not chat_id:
-#         print("DEBUG: Telegram credentials missing.")
-#         return
-    
-#     url = f"https://api.telegram.org/bot{token}/sendMessage"
-#     payload = {
-#         "chat_id": chat_id,
-#         "text": f"<b>{info['title']}</b>\n\n{content}",
-#         "parse_mode": "HTML"
-#     }
-
-#     try:
-#         # timeout=10을 주어 무한 대기를 방지하고, 결과를 출력합니다.
-#         res = requests.post(url, json=payload, timeout=10)
-#         print(f"DEBUG: Telegram Response Code: {res.status_code}")
-#         if res.status_code != 200:
-#             print(f"DEBUG: Telegram Error Message: {res.text}")
-#     except Exception as e:
-#         print(f"DEBUG: Telegram Exception occurred: {e}")
-        
-# def send_telegram_message(info, content):
-#     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
-#         return
-    
-#     # 텔레그램은 MarkdownV2보다 HTML 파싱이 안정적일 때가 많습니다.
-#     text = f"<b>[Spine Radiology]</b>\n\n"
-#     text += f"<b>{info['title']}</b>\n\n"
-#     text += f"<i>{info['journal']} | {info['date']}</i>\n\n"
-#     text += f"━━━━━━━━━━━━━━━\n"
-#     text += f"{content}\n"
-#     text += f"━━━━━━━━━━━━━━━\n\n"
-#     text += f"🔗 <a href='{info['pubmed_url']}'>PubMed 보기</a>"
-
-#     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-#     payload = {"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML"}
-    
-#     res = requests.post(url, json=payload)
-#     return res.status_code
 
 
 
@@ -297,15 +287,18 @@ if __name__ == "__main__":
     if info:
         # [중요] summarize_and_translate에 'info' 딕셔너리를 전달
         content = summarize_and_translate(info)
-        
+
+        # 로고는 발송 전에 한 번만 다운로드
+        logo_bytes = fetch_logo()
+
         # 이메일 발송
         for email in RECEIVER_EMAILS:
             try:
-                send_mail(info, content, email)
+                send_mail(info, content, email, logo_bytes)
                 print(f"Email success: {email}")
             except Exception as e:
                 print(f"Email failed: {e}")
-        
+
         # 텔레그램 발송
         print("Attempting to send Telegram message...")
         try:
@@ -313,8 +306,8 @@ if __name__ == "__main__":
             if status == 200:
                 print("Telegram success!")
         except Exception as e:
-            print(f"Telegram failed: {e}") 
-        
-                   
+            print(f"Telegram failed: {e}")
+
+
     else:
         print("No papers found.")
