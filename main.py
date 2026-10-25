@@ -208,12 +208,17 @@ def send_mail(info, content, receiver, logo_bytes=None):
                 <a href="{info['pubmed_url']}" style="display: inline-block; background-color: #0071bc; color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; font-weight: bold;">PubMed 원문 보기</a>
                 <p style="font-size: 0.85em; color: #999; margin-top: 15px;">본 메일은 PubMed 최신 논문을 분석하여 자동 발송되었습니다.</p>
 
-                <div style="margin-top: 20px;">
-                    <a href="{KSSR_HOME_URL}" target="_blank" style="text-decoration: none;">
-                        <img src="{logo_src}" alt="대한척추영상의학회 KSSR" height="40"
-                             style="height: 40px; width: auto; border: 0; display: inline-block;">
-                    </a>
-                </div>
+                <table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin: 20px auto 0 auto;">
+                    <tr>
+                        <td bgcolor="#1f3a5f" style="background-color: #1f3a5f; padding: 10px 20px; border-radius: 8px;">
+                            <a href="{KSSR_HOME_URL}" target="_blank" style="text-decoration: none;">
+                                <img src="{logo_src}" alt="대한척추영상의학회 KSSR" height="36"
+                                     style="height: 36px; width: auto; border: 0; display: block;">
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+                
             </footer>
         </div>
     </body>
@@ -224,7 +229,7 @@ def send_mail(info, content, receiver, logo_bytes=None):
     msg = MIMEMultipart('related')
     msg['Subject'] = f"[KSSR] {info['title'][:60]}..."
 #   msg['From'] = GMAIL_USER
-    display_name = "추영 KSSR bot"
+    display_name = "추영 KSSR Daily"
     msg['From'] = f"{Header(display_name, 'utf-8').encode()} <{GMAIL_USER}>"
 
     msg['To'] = receiver
