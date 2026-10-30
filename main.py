@@ -212,8 +212,8 @@ def send_mail(info, content, receiver, logo_bytes=None):
                     <tr>
                         <td bgcolor="#1f3a5f" style="background-color: #1f3a5f; padding: 10px 20px; border-radius: 8px;">
                             <a href="{KSSR_HOME_URL}" target="_blank" style="text-decoration: none;">
-                                <img src="{logo_src}" alt="대한척추영상의학회 KSSR" height="36"
-                                     style="height: 36px; width: auto; border: 0; display: block;">
+                                <img src="{logo_src}" alt="대한척추영상의학회 KSSR" height="45"
+                                     style="height: 45px; width: auto; border: 0; display: block;">
                             </a>
                         </td>
                     </tr>
